@@ -126,17 +126,22 @@ class sonic_client:
     )
 
 if __name__ == "__main__":
-  switch_address = os.getenv("SONIC_ADDRESS")
-  username = os.getenv("SONIC_USERNAME")
-  password = os.getenv("SONIC_PASSWORD")
-
+  # switch_address = os.getenv("SONIC_ADDRESS")
+  # username = os.getenv("SONIC_USERNAME")
+  # password = os.getenv("SONIC_PASSWORD")
+  
+  # main.py "192.168.2.190" admin **** config.yml
+  switch_address = sys.argv[1]
+  username = sys.argv[2]
+  password = sys.argv[3]
+  config = sys.argv[4]
+  
   client = sonic_client(switch_address, username, password)
 
-  if len(sys.argv) != 2:
-    print("please provide a path to a config file to read.")
+  if len(sys.argv) != 5:
+    print("please provide arguments to script")
+    sys.exit(1)
   
-  config = sys.argv[1]
-
   switch_config = {}
   if os.path.exists(config):
     if os.path.isfile(config):
@@ -144,6 +149,7 @@ if __name__ == "__main__":
         switch_config = yaml.safe_load(cfg_file)
   else: 
     print("config file does not exists: ", config)
+    sys.exit(1)
   
   for vlan in switch_config["config"]["vlans"]:
     if vlan["state"] == "present":
