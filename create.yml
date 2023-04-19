@@ -1,0 +1,8 @@
+---
+switch:
+  address: 192.168.2.190
+config:
+  vlans:
+    - name: Vlan10
+      state: present
+
