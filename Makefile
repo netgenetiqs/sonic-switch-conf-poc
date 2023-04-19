@@ -41,3 +41,7 @@ docker:
 .PHONY: docker-run
 docker-run:
 	docker run -v $(pwd)/main.py:/main.py -v $(pwd)/config.yml:/config.yml ttl.sh/sonic-switch-conf-poc:2h python main.py "192.168.2.190" admin *** config.yml
+
+.PHONY: install-dep
+install-dep:
+	pip install -r requirements.txt
