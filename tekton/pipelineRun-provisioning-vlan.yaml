@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: provisioning-sonic-switch-
+spec:
+  pipelineRef:
+    name: provisioning-sonic-switch
+  podTemplate:
+    securityContext:
+      fsGroup: 65532
+  workspaces:
+    - name: shared-data
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+  params:
+    - name: url
+      value: https://github.com/netgenetiqs/sonic-switch-conf-poc/
+    - name: branch-name
+      value: main
+    - name: user
+      value: admin
+    - name : pass
+      value: stateoftheart#
+    - name: switch-ip
+      value: 192.168.2.190

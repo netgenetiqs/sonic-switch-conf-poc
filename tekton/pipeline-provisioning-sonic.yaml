@@ -1,0 +1,41 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: provisioning-sonic-switch
+spec:
+  params:
+    - name: url
+    - name: branch-name
+      type: string
+    - name: user
+    - name: pass
+    - name: switch-ip
+  workspaces:
+    - name: shared-data
+  tasks:
+    - name: fetch-source
+      taskRef:
+        name: git-clone
+      params:
+        - name: url
+          value: "$(params.url)"
+        - name: revision
+          value: $(params.branch-name)
+      workspaces:
+        - name: output
+          workspace: shared-data
+    - name: provision-vlan-sonic
+      taskRef:
+        name: provision-vlan
+      runAfter:
+        - fetch-source
+      params:
+        - name: user
+          value: $(params.user)
+        - name: pass
+          value: $(params.pass)
+        - name: switch-ip
+          value: $(params.switch-ip)
+      workspaces:
+        - name: source
+          workspace: shared-data
