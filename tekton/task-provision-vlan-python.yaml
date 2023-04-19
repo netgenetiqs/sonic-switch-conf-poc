@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: provision-vlan
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: switch-ip
+    - name: user
+    - name: pass
+  steps:
+    - name: list-workspace
+      image: redhat/ubi8-minimal
+      script: |
+        ls $(workspaces.source.path)/
+    - name: provision-vlan
+      image: ttl.sh/sonic-switch-conf-poc:24h
+      command:
+        - python
+      args: ['$(workspaces.source.path)/main.py','$(params.switch-ip)','$(params.user)','$(params.pass)','$(workspaces.source.path)/config.yml']
