@@ -5,3 +5,5 @@ config:
   vlans:
     - name: Vlan10
       state: present
+    - name: Vlan20
+      state: present
